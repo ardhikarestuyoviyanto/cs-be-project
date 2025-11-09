@@ -1,0 +1,12 @@
+{
+    "nameRequired": "Nama wajib diisi",
+    "emailInvalid": "Format email tidak valid",
+    "emailRequired": "Email wajib diisi",
+    "passwordRequired": "Password wajib diisi",
+    "passwordMin": "Password minimal 6 karakter",
+    "companyRequired": "Nama perusahaan wajib diisi",
+    "phoneRequired": "Nomor telepon wajib diisi",
+    "phoneInvalid": "Nomor telepon minimal 6 digit",
+    "emailExists": "Email sudah digunakan",
+    "phoneNumberExists": "No hp sudah digunakan"
+}

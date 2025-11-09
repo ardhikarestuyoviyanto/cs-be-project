@@ -15,7 +15,7 @@ const options = {
         ],
     },
     // files containing annotations as above
-    apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
+    apis: ['./src/routes/*.ts', './src/controllers/**/*.ts'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
