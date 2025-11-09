@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum YesNo {
+  yes
+  no
+}
+
+enum StatusMessage {
+  sent
+  read
+  waiting
+  cancel
+}
+
+// ===== Models =====
+model Users {
+  id         BigInt    @id
+  name       String    @db.VarChar(255)
+  email      String    @db.VarChar(255)
+  password   String?   @db.VarChar(255)
+  isActive   YesNo     @default(yes) @map("is_active")
+  isAdmin    YesNo     @default(no) @map("is_admin")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  @@map("users")
+}
+
+model Company {
+  id          BigInt    @id
+  name        String    @db.VarChar(255)
+  address     String?   @db.Text
+  email       String?   @db.VarChar(255)
+  phoneNumber String    @db.VarChar(255) @map("phone_number")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  @@map("company")
+}
+
+model UserCompany {
+  id        BigInt    @id
+  userId    BigInt    @map("user_id")
+  companyId BigInt    @map("company_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  @@map("user_company")
+}
+
+model Role {
+  id        BigInt    @id
+  companyId BigInt    @map("company_id")
+  name      String    @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  @@map("role")
+}
+
+model UserRole {
+  id        BigInt    @id
+  userId    BigInt    @map("user_id")
+  roleId    BigInt    @map("role_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  @@map("user_role")
+}
+
+model Menu {
+  id        BigInt    @id
+  parentId  BigInt    @map("parent_id")
+  name      String    @db.VarChar(255)
+  url       String    @db.VarChar(255)
+  icon      String?   @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  @@map("menu")
+}
+
+model Access {
+  id        BigInt    @id
+  menuId    BigInt    @map("menu_id")
+  code      String    @db.VarChar(255)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  @@map("access")
+}
+
+model AccessList {
+  id        BigInt    @id
+  roleId    BigInt    @map("role_id")
+  accessId  BigInt    @map("access_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  @@map("access_list")
+}
+
+model Customer {
+  id          BigInt    @id
+  companyId   BigInt    @map("company_id")
+  name        String    @db.VarChar(255)
+  address     String?   @db.Text
+  email       String?   @db.VarChar(255)
+  phoneNumber String    @db.VarChar(255) @map("phone_number")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  @@map("customer")
+}
+
+model CustomerAccess {
+  id         BigInt    @id
+  customerId BigInt    @map("customer_id")
+  salesId    BigInt    @map("sales_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  @@map("customer_access")
+}
+
+model SortcutMessage {
+  id        BigInt    @id
+  companyId BigInt    @map("company_id")
+  name      String    @db.VarChar(255)
+  code      String    @db.VarChar(255)
+  message   String    @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  @@map("sortcut_message")
+}
+
+model ChatMessage {
+  id             BigInt       @id
+  companyId      BigInt       @map("company_id")
+  customerId     BigInt?      @map("customer_id")
+  salesId        BigInt?      @map("sales_id")
+  dateCreated    DateTime     @map("date_created")
+  phoneNumber    String       @db.VarChar(255) @map("phone_number")
+  statusClaims   YesNo        @map("status_claims")
+  statusMessage  StatusMessage @default(waiting) @map("status_message")
+  message        String       @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  deletedAt      DateTime?    @map("deleted_at")
+  @@map("chat_message")
+}
